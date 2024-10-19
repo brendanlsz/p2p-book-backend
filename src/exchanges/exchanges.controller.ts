@@ -8,19 +8,28 @@ export class ExchangesController {
   constructor(private readonly exchangesService: ExchangesService) {}
 
   @Post('/borrow')
-  async createBorrowRequest(@Body() borrowRequestDto: BorrowRequestDto, @Req() req): Promise<Exchange> {
+  async createBorrowRequest(
+    @Body() borrowRequestDto: BorrowRequestDto,
+    @Req() req,
+  ): Promise<Exchange> {
     const userId = req.user;
     return this.exchangesService.createBorrowRequest(borrowRequestDto, userId);
   }
 
   @Patch('/:id/accept')
-  async acceptRequest(@Param('id') exchangeId: number,  @Req() req): Promise<Exchange> {
+  async acceptRequest(
+    @Param('id') exchangeId: number,
+    @Req() req,
+  ): Promise<Exchange> {
     const userId = req.user;
     return this.exchangesService.acceptRequest(exchangeId, userId);
   }
 
   @Patch('/:id/reject')
-  async rejectRequest(@Param('id') exchangeId: number, @Req() req): Promise<Exchange> {
+  async rejectRequest(
+    @Param('id') exchangeId: number,
+    @Req() req,
+  ): Promise<Exchange> {
     const userId = req.user;
     return this.exchangesService.rejectRequest(exchangeId, userId);
   }
@@ -34,5 +43,11 @@ export class ExchangesController {
   async getUserBorrowingRequests(@Req() req): Promise<Exchange[]> {
     const userId = req.user;
     return this.exchangesService.getUserBorrowingRequests(userId);
+  }
+
+  @Get('/incoming-requests')
+  async getIncomingRequests(@Req() req): Promise<Exchange[]> {
+    const userId = req.user;
+    return this.exchangesService.getIncomingRequests(userId);
   }
 }

@@ -93,4 +93,8 @@ export class ExchangesService {
   async getUserBorrowingRequests(userId: string): Promise<Exchange[]> {
     return this.exchanges.filter((ex) => ex.requesterId === userId);
   }
+
+  async getIncomingRequests(userId: string): Promise<Exchange[]> {
+    return this.exchanges.filter((ex) => ex.bookOwnerId === userId);
+  }
 }
