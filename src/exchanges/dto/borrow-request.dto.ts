@@ -1,7 +1,7 @@
-import { IsNotEmpty, IsInt } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class BorrowRequestDto {
   @IsNotEmpty()
-  @IsInt()
-  bookId: number; // ID of the book being borrowed
+  @IsString()
+  bookId: string; // ID of the book being borrowed
 }

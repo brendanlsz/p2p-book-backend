@@ -1,35 +1,36 @@
-import { Controller, Post, Body, Param, Put, Get, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Post, Patch, Param, Get, Req } from '@nestjs/common';
 import { ExchangesService } from './exchanges.service';
 import { BorrowRequestDto } from './dto/borrow-request.dto';
+import { Exchange } from './entities/exchange.entity';
 
 @Controller('exchanges')
 export class ExchangesController {
   constructor(private readonly exchangesService: ExchangesService) {}
 
-  @Post()
-  async createBorrowRequest(@Body() borrowRequestDto: BorrowRequestDto, @Request() req) {
-    const userId = req.user.id; // Get user ID from the JWT payload
+  @Post('/borrow')
+  async createBorrowRequest(@Body() borrowRequestDto: BorrowRequestDto, @Req() req): Promise<Exchange> {
+    const userId = req.user;
     return this.exchangesService.createBorrowRequest(borrowRequestDto, userId);
   }
 
-  @Put(':id/accept')
-  async acceptRequest(@Param('id') id: string) {
-    return this.exchangesService.acceptRequest(+id);
+  @Patch('/:id/accept')
+  async acceptRequest(@Param('id') exchangeId: number): Promise<Exchange> {
+    return this.exchangesService.acceptRequest(exchangeId);
   }
 
-  @Put(':id/reject')
-  async rejectRequest(@Param('id') id: string) {
-    return this.exchangesService.rejectRequest(+id);
+  @Patch('/:id/reject')
+  async rejectRequest(@Param('id') exchangeId: number): Promise<Exchange> {
+    return this.exchangesService.rejectRequest(exchangeId);
   }
 
-  @Put(':id/return') // New route for returning a book
-  async returnBook(@Param('id') id: string) {
-    return this.exchangesService.returnBook(+id);
+  @Patch('/:id/return')
+  async returnBook(@Param('id') exchangeId: number): Promise<Exchange> {
+    return this.exchangesService.returnBook(exchangeId);
   }
 
-  @Get('borrower')
-  async getUserBorrowingRequests(@Request() req) {
-    const userId = req.user.id; // Get user ID from the JWT payload
+  @Get('/my-requests')
+  async getUserBorrowingRequests(@Req() req): Promise<Exchange[]> {
+    const userId = req.user;
     return this.exchangesService.getUserBorrowingRequests(userId);
   }
 }

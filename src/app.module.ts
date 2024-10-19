@@ -13,6 +13,8 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(JwtMiddleware)
-      .forRoutes('books*'); // Apply to all routes starting with 'books'
+      .forRoutes('books*')
+      .apply(JwtMiddleware)
+      .forRoutes('exchanges*'); // Apply to all routes starting with 'books'
   }
 }
