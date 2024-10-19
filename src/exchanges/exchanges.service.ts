@@ -57,6 +57,8 @@ export class ExchangesService {
     }
 
     exchange.status = 'Accepted';
+    await this.bookService.update(exchange.bookId, { status: `Lent to ${exchange.requesterId}` });
+
     return exchange;
   }
 
@@ -72,6 +74,8 @@ export class ExchangesService {
     }
 
     exchange.status = 'Rejected';
+    await this.bookService.update(exchange.bookId, { status: `available` });
+
     return exchange;
   }
 
@@ -84,8 +88,7 @@ export class ExchangesService {
 
     exchange.status = 'Returned'; // Update status to Returned
 
-    // Optionally update the book's status back to available
-    await this.bookService.update(exchange.bookId, { status: 'Available' });
+    await this.bookService.update(exchange.bookId, { status: 'available' });
 
     return exchange;
   }
