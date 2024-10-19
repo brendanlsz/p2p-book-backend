@@ -1,4 +1,4 @@
-import { BadGatewayException, BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { BorrowRequestDto } from './dto/borrow-request.dto';
 import { BooksService } from '../books/books.service'; // Import your BookService
 import { Exchange } from './entities/exchange.entity'; // Your Exchange entity
@@ -45,22 +45,30 @@ export class ExchangesService {
     return exchange;
   }
 
-  async acceptRequest(exchangeId: number): Promise<Exchange> {
+  async acceptRequest(exchangeId: number, userId: string): Promise<Exchange> {
     const exchange = this.exchanges.find((ex) => ex.id === exchangeId.toString());
 
     if (!exchange) {
       throw new NotFoundException('Request not found');
     }
 
+    if (exchange.bookOwnerId !== userId) {
+        throw new UnauthorizedException('You are not authorized to accept this request');
+    }
+
     exchange.status = 'Accepted';
     return exchange;
   }
 
-  async rejectRequest(exchangeId: number): Promise<Exchange> {
+  async rejectRequest(exchangeId: number, userId: string): Promise<Exchange> {
     const exchange = this.exchanges.find((ex) => ex.id === exchangeId.toString());
 
     if (!exchange) {
       throw new NotFoundException('Request not found');
+    }
+
+    if (exchange.bookOwnerId !== userId) {
+        throw new UnauthorizedException('You are not authorized to reject this request');
     }
 
     exchange.status = 'Rejected';

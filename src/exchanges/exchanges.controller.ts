@@ -14,13 +14,15 @@ export class ExchangesController {
   }
 
   @Patch('/:id/accept')
-  async acceptRequest(@Param('id') exchangeId: number): Promise<Exchange> {
-    return this.exchangesService.acceptRequest(exchangeId);
+  async acceptRequest(@Param('id') exchangeId: number,  @Req() req): Promise<Exchange> {
+    const userId = req.user;
+    return this.exchangesService.acceptRequest(exchangeId, userId);
   }
 
   @Patch('/:id/reject')
-  async rejectRequest(@Param('id') exchangeId: number): Promise<Exchange> {
-    return this.exchangesService.rejectRequest(exchangeId);
+  async rejectRequest(@Param('id') exchangeId: number, @Req() req): Promise<Exchange> {
+    const userId = req.user;
+    return this.exchangesService.rejectRequest(exchangeId, userId);
   }
 
   @Patch('/:id/return')
