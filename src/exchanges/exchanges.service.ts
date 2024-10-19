@@ -1,4 +1,4 @@
-import { BadGatewayException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { BorrowRequestDto } from './dto/borrow-request.dto';
 import { BooksService } from '../books/books.service'; // Import your BookService
 import { Exchange } from './entities/exchange.entity'; // Your Exchange entity
@@ -20,7 +20,7 @@ export class ExchangesService {
     }
     
     if (book.ownerId === requesterId) {
-      throw new BadGatewayException('You cannot borrow your own book');
+      throw new BadRequestException('You cannot borrow your own book');
     }
 
     if (book.status !== 'available') {
